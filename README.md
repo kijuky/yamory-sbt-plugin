@@ -6,6 +6,13 @@
 
 This plugin requires sbt 1.4+
 
+plugins.sbt:
+
+```sbt
+addSbtPlugin("io.github.kijuky" % "yamory-sbt-plugin" % "1.1.0")
+```
+
+
 build.sbt:
 
 ```sbt
