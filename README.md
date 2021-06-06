@@ -21,6 +21,8 @@ yamoryApiKey := sys.env("YAMORY_API_KEY")
 yamoryScriptUrl := "PUT https://yamory/script/..."
 ```
 
+credentials:
+
 ```.envrc:shell
 export YAMORY_API_KEY="PUT YOUR YAMORY_API_KEY"
 ```
