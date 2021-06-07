@@ -76,7 +76,6 @@ sbt yamoryYarn
   sbt client/yamoryYarn
   ```
 
-
 then scan results are recorded in yamory.
 
 ## for Developers
