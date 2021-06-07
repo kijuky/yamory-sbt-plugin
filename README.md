@@ -19,7 +19,7 @@ build.sbt:
 ```sbt
 yamoryProjectGroupKey := "PUT PROJECT_GROUP_KEY"
 yamoryApiKey := sys.env("YAMORY_API_KEY")
-yamoryScriptUrl := "PUT https://yamory/script/..."
+yamorySbtScriptUrl := "PUT https://yamory/script/..."
 ```
 
 credentials:

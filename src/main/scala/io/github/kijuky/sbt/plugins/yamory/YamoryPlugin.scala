@@ -25,7 +25,9 @@ object YamoryPlugin extends AutoPlugin {
   object autoImport {
     val yamoryProjectGroupKey = settingKey[String]("PROJECT_GROUP_KEY")
     val yamoryApiKey = settingKey[String]("YAMORY_API_KEY")
+    @deprecated("yamorySbtScriptUrl instead.", "1.1.0")
     val yamoryScriptUrl = settingKey[String]("https://yamory/script/...")
+    val yamorySbtScriptUrl = settingKey[String]("https://yamory/script/...")
     val yamoryYarnScriptUrl = settingKey[String]("https://yamory/script/...")
     val yamoryYarnManifest = settingKey[String]("path to package.json")
     val yamory = taskKey[Unit]("A task that is run yamory scan for scala project.")
@@ -38,6 +40,7 @@ object YamoryPlugin extends AutoPlugin {
     yamoryProjectGroupKey := "",
     yamoryApiKey := "",
     yamoryScriptUrl := "",
+    yamorySbtScriptUrl := "",
     yamoryYarnScriptUrl := "",
     yamoryYarnManifest := "./package.json",
     yamory := yamoryTask.value,
@@ -51,29 +54,32 @@ object YamoryPlugin extends AutoPlugin {
   lazy val yamoryTask = Def.task {
     val projectGroupKey = yamoryProjectGroupKey.value
     val yamoryApiKey = autoImport.yamoryApiKey.value
-    val yamoryScriptUrl = autoImport.yamoryScriptUrl.value
+    val yamorySbtScriptUrl = autoImport.yamorySbtScriptUrl.value match {
+      case x if x.isEmpty => autoImport.yamoryScriptUrl.value
+      case x => x
+    }
 
     require(projectGroupKey.nonEmpty, "PROJECT_GROUP_KEY is empty. set 'yamoryProjectGroupKey' setting.")
     require(yamoryApiKey.nonEmpty, "YAMORY_API_KEY is empty. set 'yamoryApiKey' setting.")
-    require(yamoryScriptUrl.nonEmpty, "yamory script url is empty. set 'yamoryScriptUrl' setting.")
+    require(yamorySbtScriptUrl.nonEmpty, "yamory script url is empty. set 'yamorySbtScriptUrl' setting.")
 
     val dependenciesFile = Files.createTempFile("sbt", ".txt").toFile
-    val yamoryScriptFile = Files.createTempFile("sbt", ".sh").toFile
-    Seq(dependenciesFile, yamoryScriptFile).foreach(_.deleteOnExit())
+    val yamorySbtScriptFile = Files.createTempFile("sbt", ".sh").toFile
+    Seq(dependenciesFile, yamorySbtScriptFile).foreach(_.deleteOnExit())
     try {
       val dependencies = (Compile / dependencyTree / asString).value
       val dependenciesLog = dependencies.split("\n").map("[info] " + _).mkString("\n")
       IO.write(dependenciesFile, dependenciesLog, IO.utf8)
-      url(yamoryScriptUrl) #> yamoryScriptFile !
-      val yamoryScriptFilePath = yamoryScriptFile.getAbsolutePath
-      s"chmod +x $yamoryScriptFilePath" #&& (dependenciesFile #> Process(
-        Seq("bash", "-c", yamoryScriptFilePath),
+      url(yamorySbtScriptUrl) #> yamorySbtScriptFile !
+      val yamorySbtScriptFilePath = yamorySbtScriptFile.getAbsolutePath
+      s"chmod +x $yamorySbtScriptFilePath" #&& (dependenciesFile #> Process(
+        Seq("bash", "-c", yamorySbtScriptFilePath),
         None,
         "PROJECT_GROUP_KEY" -> projectGroupKey,
         "YAMORY_API_KEY" -> yamoryApiKey
       )) !
     } finally {
-      Seq(dependenciesFile, yamoryScriptFile).foreach(_.delete())
+      Seq(dependenciesFile, yamorySbtScriptFile).foreach(_.delete())
     }
   }
 
