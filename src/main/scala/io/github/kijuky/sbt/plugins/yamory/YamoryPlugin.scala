@@ -26,7 +26,10 @@ object YamoryPlugin extends AutoPlugin {
     val yamoryProjectGroupKey = settingKey[String]("PROJECT_GROUP_KEY")
     val yamoryApiKey = settingKey[String]("YAMORY_API_KEY")
     val yamoryScriptUrl = settingKey[String]("https://yamory/script/...")
-    val yamory = taskKey[Unit]("A task that is run yamory scan.")
+    val yamoryYarnScriptUrl = settingKey[String]("https://yamory/script/...")
+    val yamoryYarnManifest = settingKey[String]("path to package.json")
+    val yamory = taskKey[Unit]("A task that is run yamory scan for scala project.")
+    val yamoryYarn = taskKey[Unit]("A task that is run yamory scan for scala.js project.")
   }
 
   import autoImport._
@@ -35,7 +38,10 @@ object YamoryPlugin extends AutoPlugin {
     yamoryProjectGroupKey := "",
     yamoryApiKey := "",
     yamoryScriptUrl := "",
-    yamory := yamoryTask.value
+    yamoryYarnScriptUrl := "",
+    yamoryYarnManifest := "./package.json",
+    yamory := yamoryTask.value,
+    yamoryYarn := yamoryYarnTask.value
   )
 
   override lazy val buildSettings = Seq()
@@ -68,6 +74,33 @@ object YamoryPlugin extends AutoPlugin {
       )) !
     } finally {
       Seq(dependenciesFile, yamoryScriptFile).foreach(_.delete())
+    }
+  }
+
+  lazy val yamoryYarnTask = Def.task {
+    val projectGroupKey = yamoryProjectGroupKey.value
+    val yamoryApiKey = autoImport.yamoryApiKey.value
+    val yamoryYarnScriptUrl = autoImport.yamoryYarnScriptUrl.value
+    val yamoryYarnManifest = autoImport.yamoryYarnManifest.value
+
+    require(projectGroupKey.nonEmpty, "PROJECT_GROUP_KEY is empty. set 'yamoryProjectGroupKey' setting.")
+    require(yamoryApiKey.nonEmpty, "YAMORY_API_KEY is empty. set 'yamoryApiKey' setting.")
+    require(yamoryYarnScriptUrl.nonEmpty, "yamory yarn script url is empty. set 'yamoryYarnScriptUrl' setting.")
+    require(yamoryYarnManifest.nonEmpty, "yamory yarn manifest is empty. set 'yamoryYarnManifest' setting.")
+
+    val yamoryYarnScriptFile = Files.createTempFile("sbt", ".sh").toFile
+    yamoryYarnScriptFile.deleteOnExit()
+    try {
+      url(yamoryYarnScriptUrl) #> yamoryYarnScriptFile !
+      val yamoryYarnScriptFilePath = yamoryYarnScriptFile.getAbsolutePath
+      s"chmod +x $yamoryYarnScriptFilePath" #&& Process(
+        Seq("bash", "-c", yamoryYarnScriptFilePath, "--", "--manifest", yamoryYarnManifest),
+        None,
+        "PROJECT_GROUP_KEY" -> projectGroupKey,
+        "YAMORY_API_KEY" -> yamoryApiKey
+      ) !
+    } finally {
+      yamoryYarnScriptFile.delete()
     }
   }
 }

@@ -1,6 +1,6 @@
 # yamory-sbt-plugin
 
-[yamory](https://yamory.io/) for sbt
+[yamory](https://yamory.io/) for sbt.
 
 ## Usage
 
@@ -12,6 +12,7 @@ plugins.sbt:
 addSbtPlugin("io.github.kijuky" % "yamory-sbt-plugin" % "1.1.0")
 ```
 
+### for Scala project
 
 build.sbt:
 
@@ -34,6 +35,51 @@ sbt yamory
 ```
 
 then scan results are recorded in yamory.
+
+### for [Scala.js](https://www.scala-js.org/) project
+
+[Since yamory supports the yarn project](https://yamory.io/docs/command-scan-yarn/#gsc.tab=0),
+you can scan [the node packages](https://www.npmjs.com/) used by your scala.js project.
+
+build.sbt:
+
+```sbt
+yamoryProjectGroupKey := "PUT PROJECT_GROUP_KEY"
+yamoryApiKey := sys.env("YAMORY_API_KEY")
+yamoryYarnScriptUrl := "PUT https://yamory/script/..."
+```
+
+- Share `yamoryProjectGroupKey` and `yamoryApiKey`.
+- If you are using [scalajs-bundler](https://github.com/scalacenter/scalajs-bundler)
+  and you are using [`npmDependencies`](https://scalacenter.github.io/scalajs-bundler/reference.html#npm-dependencies),
+  you need to add the following settings:
+  ```
+  yamoryYarnManifest := "./target/scala-2.12/scalajs-bundler/main/package.json"
+  ```
+  If you omit this setting, `./package.json` will be referenced.
+
+credentials:
+
+```.envrc:shell
+export YAMORY_API_KEY="PUT YOUR YAMORY_API_KEY"
+```
+
+and run
+
+```shell
+sbt yamoryYarn
+```
+
+- For [a multi-project build](https://www.scala-sbt.org/1.x/docs/Multi-Project.html),
+  specify the project and execute:
+  ```
+  sbt client/yamoryYarn
+  ```
+
+
+then scan results are recorded in yamory.
+
+## for Developers
 
 ### Testing
 
