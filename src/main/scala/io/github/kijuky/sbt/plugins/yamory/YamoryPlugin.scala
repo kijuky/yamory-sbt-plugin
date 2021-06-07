@@ -61,7 +61,7 @@ object YamoryPlugin extends AutoPlugin {
 
     require(projectGroupKey.nonEmpty, "PROJECT_GROUP_KEY is empty. set 'yamoryProjectGroupKey' setting.")
     require(yamoryApiKey.nonEmpty, "YAMORY_API_KEY is empty. set 'yamoryApiKey' setting.")
-    require(yamorySbtScriptUrl.nonEmpty, "yamory script url is empty. set 'yamorySbtScriptUrl' setting.")
+    require(yamorySbtScriptUrl.nonEmpty, "yamory sbt script url is empty. set 'yamorySbtScriptUrl' setting.")
 
     val dependenciesFile = Files.createTempFile("sbt", ".txt").toFile
     val yamorySbtScriptFile = Files.createTempFile("sbt", ".sh").toFile
