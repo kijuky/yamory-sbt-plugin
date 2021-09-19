@@ -15,3 +15,20 @@ jobs:
         run: sbt scalafmtCheckAll
       - name: Check scalafmtSbt
         run: sbt scalafmtSbtCheck
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v1
+      - name: Setup Scala
+        uses: olafurpg/setup-scala@v10
+        with:
+          java-version: "adopt@1.8"
+      - name: Use Node.js
+        uses: actions/setup-node@v1
+        with:
+          node-version: '14.x'
+      - name: Test
+        run: sbt test
+      - name: Scripted
+        run: sbt scripted

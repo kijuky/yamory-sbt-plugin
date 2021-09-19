@@ -1,4 +1,4 @@
-name := "yamory-sbt-plugin"
+name := "sbt-yamory"
 
 sbtPlugin := true
 
@@ -20,7 +20,7 @@ scriptedLaunchOpts ++=
 inThisBuild(
   Seq(
     organization := "io.github.kijuky",
-    homepage := Some(url("https://github.com/kijuky/yamory-sbt-plugin")),
+    homepage := Some(url("https://github.com/kijuky/sbt-yamory")),
     licenses := Seq(
       "Apache-2.0" -> url("http://www.apache.org/licenses/LICENSE-2.0")
     ),

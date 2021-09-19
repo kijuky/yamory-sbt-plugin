@@ -1,4 +1,4 @@
-# yamory-sbt-plugin
+# sbt-yamory
 
 [yamory](https://yamory.io/) for sbt.
 
@@ -9,7 +9,7 @@ This plugin requires sbt 1.4+
 plugins.sbt:
 
 ```sbt
-addSbtPlugin("io.github.kijuky" % "yamory-sbt-plugin" % "1.1.0")
+addSbtPlugin("io.github.kijuky" % "sbt-yamory" % "3.0.0")
 ```
 
 ### for Scala project
@@ -84,7 +84,7 @@ then scan results are recorded in yamory.
 
 Run `test` for regular unit tests.
 
-Run `scripted` for [sbt script tests](http://www.scala-sbt.org/1.x/docs/Testing-sbt-plugins.html).
+Run `scripted` for [sbt script tests](http://www.scala-sbt.org/1.x/docs/Testing-sbt-plugins.html). (Not support on Windows)
 
 ### Publishing
 
