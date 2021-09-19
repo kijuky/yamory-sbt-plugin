@@ -3,9 +3,15 @@ on:
   push
 jobs:
   scalafmt:
-    runs-on: "eed3si9n/sbt:jdk11-alpine"
+    runs-on: ubuntu-latest
     steps:
-      - name: check scalafmtAll
-        run: sbt scalafmtCheckAll
-      - name: check scalafmtSbt
+      - name: Checkout
+        uses: actions/checkout@v1
+      - name: Setup Scala
+        uses: olafurpg/setup-scala@v10
+        with:
+          java-version: "adopt@1.8"
+      - name: Check scalafmtAll
+        run: sbt scalafmtAllCheck
+      - name: Check scalafmtSbt
         run: sbt scalafmtSbtCheck
