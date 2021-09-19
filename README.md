@@ -4,7 +4,7 @@
 
 ## Usage
 
-This plugin requires sbt 1.4+
+This plugin requires `bash`, `chmod`, and sbt 1.4+
 
 plugins.sbt:
 
@@ -84,7 +84,7 @@ then scan results are recorded in yamory.
 
 Run `test` for regular unit tests.
 
-Run `scripted` for [sbt script tests](http://www.scala-sbt.org/1.x/docs/Testing-sbt-plugins.html). (Not support on Windows)
+Run `scripted` for [sbt script tests](http://www.scala-sbt.org/1.x/docs/Testing-sbt-plugins.html).
 
 ### Publishing
 
