@@ -25,13 +25,13 @@ object YamoryPlugin extends AutoPlugin {
   object autoImport {
     val yamoryProjectGroupKey = settingKey[String]("PROJECT_GROUP_KEY")
     val yamoryApiKey = settingKey[String]("YAMORY_API_KEY")
-    @deprecated("yamorySbtScriptUrl instead.", "1.1.0")
-    val yamoryScriptUrl = settingKey[String]("https://yamory/script/...")
     val yamorySbtScriptUrl = settingKey[String]("https://yamory/script/...")
     val yamoryYarnScriptUrl = settingKey[String]("https://yamory/script/...")
     val yamoryYarnManifest = settingKey[String]("path to package.json")
-    val yamory = taskKey[Unit]("A task that is run yamory scan for scala project.")
-    val yamoryYarn = taskKey[Unit]("A task that is run yamory scan for scala.js project.")
+    val yamory =
+      taskKey[Unit]("A task that is run yamory scan for scala project.")
+    val yamoryYarn =
+      taskKey[Unit]("A task that is run yamory scan for scala.js project.")
   }
 
   import autoImport._
@@ -39,7 +39,6 @@ object YamoryPlugin extends AutoPlugin {
   override lazy val projectSettings = Seq(
     yamoryProjectGroupKey := "",
     yamoryApiKey := "",
-    yamoryScriptUrl := "",
     yamorySbtScriptUrl := "",
     yamoryYarnScriptUrl := "",
     yamoryYarnManifest := "./package.json",
@@ -54,21 +53,28 @@ object YamoryPlugin extends AutoPlugin {
   lazy val yamoryTask = Def.task {
     val projectGroupKey = yamoryProjectGroupKey.value
     val yamoryApiKey = autoImport.yamoryApiKey.value
-    val yamorySbtScriptUrl = autoImport.yamorySbtScriptUrl.value match {
-      case x if x.isEmpty => autoImport.yamoryScriptUrl.value
-      case x => x
-    }
+    val yamorySbtScriptUrl = autoImport.yamorySbtScriptUrl.value
 
-    require(projectGroupKey.nonEmpty, "PROJECT_GROUP_KEY is empty. set 'yamoryProjectGroupKey' setting.")
-    require(yamoryApiKey.nonEmpty, "YAMORY_API_KEY is empty. set 'yamoryApiKey' setting.")
-    require(yamorySbtScriptUrl.nonEmpty, "yamory sbt script url is empty. set 'yamorySbtScriptUrl' setting.")
+    require(
+      projectGroupKey.nonEmpty,
+      "PROJECT_GROUP_KEY is empty. set 'yamoryProjectGroupKey' setting."
+    )
+    require(
+      yamoryApiKey.nonEmpty,
+      "YAMORY_API_KEY is empty. set 'yamoryApiKey' setting."
+    )
+    require(
+      yamorySbtScriptUrl.nonEmpty,
+      "yamory sbt script url is empty. set 'yamorySbtScriptUrl' setting."
+    )
 
     val dependenciesFile = Files.createTempFile("sbt", ".txt").toFile
     val yamorySbtScriptFile = Files.createTempFile("sbt", ".sh").toFile
     Seq(dependenciesFile, yamorySbtScriptFile).foreach(_.deleteOnExit())
     try {
       val dependencies = (Compile / dependencyTree / asString).value
-      val dependenciesLog = dependencies.split("\n").map("[info] " + _).mkString("\n")
+      val dependenciesLog =
+        dependencies.split("\n").map("[info] ".+).mkString("\n")
       IO.write(dependenciesFile, dependenciesLog, IO.utf8)
       url(yamorySbtScriptUrl) #> yamorySbtScriptFile !
       val yamorySbtScriptFilePath = yamorySbtScriptFile.getAbsolutePath
@@ -89,10 +95,22 @@ object YamoryPlugin extends AutoPlugin {
     val yamoryYarnScriptUrl = autoImport.yamoryYarnScriptUrl.value
     val yamoryYarnManifest = autoImport.yamoryYarnManifest.value
 
-    require(projectGroupKey.nonEmpty, "PROJECT_GROUP_KEY is empty. set 'yamoryProjectGroupKey' setting.")
-    require(yamoryApiKey.nonEmpty, "YAMORY_API_KEY is empty. set 'yamoryApiKey' setting.")
-    require(yamoryYarnScriptUrl.nonEmpty, "yamory yarn script url is empty. set 'yamoryYarnScriptUrl' setting.")
-    require(yamoryYarnManifest.nonEmpty, "yamory yarn manifest is empty. set 'yamoryYarnManifest' setting.")
+    require(
+      projectGroupKey.nonEmpty,
+      "PROJECT_GROUP_KEY is empty. set 'yamoryProjectGroupKey' setting."
+    )
+    require(
+      yamoryApiKey.nonEmpty,
+      "YAMORY_API_KEY is empty. set 'yamoryApiKey' setting."
+    )
+    require(
+      yamoryYarnScriptUrl.nonEmpty,
+      "yamory yarn script url is empty. set 'yamoryYarnScriptUrl' setting."
+    )
+    require(
+      yamoryYarnManifest.nonEmpty,
+      "yamory yarn manifest is empty. set 'yamoryYarnManifest' setting."
+    )
 
     val yamoryYarnScriptFile = Files.createTempFile("sbt", ".sh").toFile
     yamoryYarnScriptFile.deleteOnExit()
@@ -100,7 +118,14 @@ object YamoryPlugin extends AutoPlugin {
       url(yamoryYarnScriptUrl) #> yamoryYarnScriptFile !
       val yamoryYarnScriptFilePath = yamoryYarnScriptFile.getAbsolutePath
       s"chmod +x $yamoryYarnScriptFilePath" #&& Process(
-        Seq("bash", "-c", yamoryYarnScriptFilePath, "--", "--manifest", yamoryYarnManifest),
+        Seq(
+          "bash",
+          "-c",
+          yamoryYarnScriptFilePath,
+          "--",
+          "--manifest",
+          yamoryYarnManifest
+        ),
         None,
         "PROJECT_GROUP_KEY" -> projectGroupKey,
         "YAMORY_API_KEY" -> yamoryApiKey
