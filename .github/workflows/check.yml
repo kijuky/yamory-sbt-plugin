@@ -1,0 +1,17 @@
+name: Check
+on:
+  push
+jobs:
+  scalafmt:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v1
+      - name: Setup Scala
+        uses: olafurpg/setup-scala@v10
+        with:
+          java-version: "adopt@1.8"
+      - name: Check scalafmtAll
+        run: sbt scalafmtCheckAll
+      - name: Check scalafmtSbt
+        run: sbt scalafmtSbtCheck

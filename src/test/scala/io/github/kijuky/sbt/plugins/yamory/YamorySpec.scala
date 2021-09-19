@@ -1,5 +1,5 @@
 package io.github.kijuky.sbt.plugins.yamory
 
-class YamoryTest {
+class YamorySpec {
   // write tests with your preferred framework
 }
