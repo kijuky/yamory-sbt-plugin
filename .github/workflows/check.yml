@@ -6,11 +6,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v1
+        uses: actions/checkout@v2.3.4
       - name: Setup Scala
         uses: olafurpg/setup-scala@v10
         with:
-          java-version: "adopt@1.8"
+          java-version: 'adopt@1.8'
       - name: Check scalafmtAll
         run: sbt scalafmtCheckAll
       - name: Check scalafmtSbt
@@ -19,11 +19,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v1
+        uses: actions/checkout@v2.3.4
       - name: Setup Scala
         uses: olafurpg/setup-scala@v10
         with:
-          java-version: "adopt@1.8"
+          java-version: 'adopt@1.8'
       - name: Use Node.js
         uses: actions/setup-node@v1
         with:
