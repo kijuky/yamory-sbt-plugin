@@ -9,7 +9,7 @@ This plugin requires `bash`, `chmod`, and sbt 1.4+
 plugins.sbt:
 
 ```sbt
-addSbtPlugin("io.github.kijuky" % "sbt-yamory" % "3.0.0")
+addSbtPlugin("io.github.kijuky" % "sbt-yamory" % "4.0.0")
 ```
 
 ### for Scala project
@@ -35,6 +35,8 @@ sbt yamory
 ```
 
 then scan results are recorded in yamory.
+
+You should set `yamorySbtScriptUrl`. if it is empty, the `yamory` task do nothing.
 
 ### for [Scala.js](https://www.scala-js.org/) project
 
@@ -69,6 +71,8 @@ and run
 ```shell
 sbt yamoryYarn
 ```
+
+You should set `yamoryYarnScriptUrl`. if it is empty, the `yamoryYarn` task do nothing.
 
 - For [a multi-project build](https://www.scala-sbt.org/1.x/docs/Multi-Project.html),
   specify the project and execute:
