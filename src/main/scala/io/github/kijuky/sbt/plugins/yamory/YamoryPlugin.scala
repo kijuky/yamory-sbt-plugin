@@ -54,6 +54,7 @@ object YamoryPlugin extends AutoPlugin {
     val projectGroupKey = yamoryProjectGroupKey.value
     val yamoryApiKey = autoImport.yamoryApiKey.value
     val yamorySbtScriptUrl = autoImport.yamorySbtScriptUrl.value
+    val dependencies = (Compile / dependencyTree / asString).value
 
     require(
       projectGroupKey.nonEmpty,
@@ -69,7 +70,6 @@ object YamoryPlugin extends AutoPlugin {
       val yamorySbtScriptFile = Files.createTempFile("sbt", ".sh").toFile
       Seq(dependenciesFile, yamorySbtScriptFile).foreach(_.deleteOnExit())
       try {
-        val dependencies = (Compile / dependencyTree / asString).value
         val dependenciesLog =
           dependencies.split("\n").map("[info] ".+).mkString("\n")
         IO.write(dependenciesFile, dependenciesLog, IO.utf8)
