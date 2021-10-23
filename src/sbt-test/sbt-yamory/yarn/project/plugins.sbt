@@ -1,10 +1,11 @@
-{
-  val pluginVersion = System.getProperty("plugin.version")
-  if (pluginVersion == null)
+System.getProperty("plugin.version") match {
+  case null =>
     throw new RuntimeException(
       """|The system property 'plugin.version' is not defined.
-         |Specify this property using the scriptedLaunchOpts -D.""".stripMargin)
-  else addSbtPlugin("io.github.kijuky" % """sbt-yamory""" % pluginVersion)
+         |Specify this property using the scriptedLaunchOpts -D.""".stripMargin
+    )
+  case pluginVersion =>
+    addSbtPlugin("io.github.kijuky" % "sbt-yamory" % pluginVersion)
 }
 
 addSbtPlugin("org.scala-js" % "sbt-scalajs" % "1.5.1")

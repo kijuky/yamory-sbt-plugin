@@ -4,7 +4,7 @@
 
 ## Usage
 
-This plugin requires `bash`, `chmod`, and sbt 1.4+
+This plugin requires `bash`, and sbt 1.4+
 
 plugins.sbt:
 

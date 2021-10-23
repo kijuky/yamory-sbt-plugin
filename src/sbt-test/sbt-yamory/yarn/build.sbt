@@ -1,5 +1,5 @@
 version := "1.0.0"
-scalaVersion := "2.12.1"
+scalaVersion := "2.13.6"
 
 yamoryProjectGroupKey := "dummy"
 yamoryApiKey := "dummy"
