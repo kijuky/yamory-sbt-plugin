@@ -11,10 +11,8 @@ jobs:
         uses: olafurpg/setup-scala@v10
         with:
           java-version: 'adopt@1.8'
-      - name: Check scalafmtAll
-        run: sbt scalafmtCheckAll
-      - name: Check scalafmtSbt
-        run: sbt scalafmtSbtCheck
+      - name: Check scalafmtCheck
+        run: sbt scalafmtCheckAll scalafmtSbtCheck
   test:
     runs-on: ubuntu-latest
     steps:
@@ -28,7 +26,5 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: '14.x'
-      - name: Test
-        run: sbt test
-      - name: Scripted
-        run: sbt scripted
+      - name: Tests
+        run: sbt test scripted
