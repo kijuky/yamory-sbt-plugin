@@ -68,7 +68,10 @@ object YamoryPlugin extends AutoPlugin {
         IO.write(dependenciesFile, dependenciesLog, IO.utf8)
         url(yamorySbtScriptUrl) #> yamorySbtScriptFile !
         val yamorySbtScriptFilePath = yamorySbtScriptFile.getAbsolutePath
-        yamorySbtScriptFile.setExecutable(true)
+        assume(
+          yamorySbtScriptFile.setExecutable(true),
+          s"$yamorySbtScriptFile is not executable."
+        )
         dependenciesFile #> Process(
           Seq("bash", "-c", yamorySbtScriptFilePath),
           None,
@@ -106,7 +109,10 @@ object YamoryPlugin extends AutoPlugin {
       try {
         url(yamoryYarnScriptUrl) #> yamoryYarnScriptFile !
         val yamoryYarnScriptFilePath = yamoryYarnScriptFile.getAbsolutePath
-        yamoryYarnScriptFile.setExecutable(true)
+        assume(
+          yamoryYarnScriptFile.setExecutable(true),
+          s"$yamoryYarnScriptFile is not executable."
+        )
         Process(
           Seq(
             "bash",
