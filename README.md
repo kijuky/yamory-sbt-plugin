@@ -9,7 +9,7 @@ This plugin requires `bash`, and sbt 1.4+
 plugins.sbt:
 
 ```sbt
-addSbtPlugin("io.github.kijuky" % "sbt-yamory" % "4.0.0")
+addSbtPlugin("io.github.kijuky" % "sbt-yamory" % "4.0.2")
 ```
 
 ### for Scala project
