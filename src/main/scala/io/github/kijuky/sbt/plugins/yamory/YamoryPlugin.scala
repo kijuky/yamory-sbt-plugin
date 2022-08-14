@@ -1,19 +1,12 @@
 package io.github.kijuky.sbt.plugins.yamory
 
-import _root_.sbt.AutoPlugin
-import _root_.sbt.Compile
-import _root_.sbt.Def
-import _root_.sbt.io.IO
-import _root_.sbt.plugins.JvmPlugin
-import _root_.sbt.plugins.MiniDependencyTreeKeys._
-import _root_.sbt.plugins.MiniDependencyTreePlugin
-import _root_.sbt.settingKey
-import _root_.sbt.taskKey
-import _root_.sbt.url
+import sbt._
+import sbt.io.IO
+import sbt.plugins._
+import sbt.plugins.MiniDependencyTreeKeys._
 
-import java.nio.file.Files
-import scala.language.postfixOps
-import scala.sys.process.Process
+import java.nio.file._
+import scala.language._
 import scala.sys.process._
 
 object YamoryPlugin extends AutoPlugin {
@@ -75,12 +68,16 @@ object YamoryPlugin extends AutoPlugin {
         IO.write(dependenciesFile, dependenciesLog, IO.utf8)
         url(yamorySbtScriptUrl) #> yamorySbtScriptFile !
         val yamorySbtScriptFilePath = yamorySbtScriptFile.getAbsolutePath
-        s"chmod +x $yamorySbtScriptFilePath" #&& (dependenciesFile #> Process(
+        assume(
+          yamorySbtScriptFile.setExecutable(true),
+          s"$yamorySbtScriptFile is not executable."
+        )
+        dependenciesFile #> Process(
           Seq("bash", "-c", yamorySbtScriptFilePath),
           None,
           "PROJECT_GROUP_KEY" -> projectGroupKey,
           "YAMORY_API_KEY" -> yamoryApiKey
-        )) !
+        ) !
       } finally {
         Seq(dependenciesFile, yamorySbtScriptFile).foreach(_.delete())
       }
@@ -112,7 +109,11 @@ object YamoryPlugin extends AutoPlugin {
       try {
         url(yamoryYarnScriptUrl) #> yamoryYarnScriptFile !
         val yamoryYarnScriptFilePath = yamoryYarnScriptFile.getAbsolutePath
-        s"chmod +x $yamoryYarnScriptFilePath" #&& Process(
+        assume(
+          yamoryYarnScriptFile.setExecutable(true),
+          s"$yamoryYarnScriptFile is not executable."
+        )
+        Process(
           Seq(
             "bash",
             "-c",
