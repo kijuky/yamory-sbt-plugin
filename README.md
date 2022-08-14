@@ -49,7 +49,7 @@ yamoryNpmScriptUrl := "https://yamory/script/..."
 - If you are using [scalajs-bundler](https://github.com/scalacenter/scalajs-bundler)
   and you are using [`npmDependencies`](https://scalacenter.github.io/scalajs-bundler/reference.html#npm-dependencies),
   you need to add the following settings:
-  ```shell
+  ```sbt
   yamoryNpmManifest := "./target/scala-2.12/scalajs-bundler/main/package.json"
   ```
   If you omit this setting, `./package.json` will be referenced.
