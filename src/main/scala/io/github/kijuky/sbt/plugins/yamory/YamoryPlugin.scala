@@ -45,8 +45,8 @@ object YamoryPlugin extends AutoPlugin {
 
   override lazy val projectSettings = Seq(
     // for yamory
-    yamoryProjectGroupKey := "",
-    yamoryApiKey := "",
+    yamoryProjectGroupKey := sys.env.getOrElse("PROJECT_GROUP_KEY", ""),
+    yamoryApiKey := sys.env.getOrElse("YAMORY_API_KEY", ""),
 
     // for scala
     yamorySbtScriptUrl := "",
@@ -58,7 +58,7 @@ object YamoryPlugin extends AutoPlugin {
     yamoryNpm := yamoryNpmTask.value,
 
     // for scala.js using yarn
-    yamoryNpmScriptUrl := "",
+    yamoryYarnScriptUrl := "",
     yamoryYarnManifest := "./package.json",
     yamoryYarn := yamoryYarnTask.value
   )
@@ -124,7 +124,7 @@ object YamoryPlugin extends AutoPlugin {
     )
     require(
       yamoryNpmManifest.nonEmpty,
-      "yamory yarn manifest is empty. set 'yamoryNpmManifest' setting."
+      "yamory npm manifest is empty. set 'yamoryNpmManifest' setting."
     )
 
     if (yamoryNpmScriptUrl.nonEmpty) {
@@ -159,7 +159,7 @@ object YamoryPlugin extends AutoPlugin {
   lazy val yamoryYarnTask = Def.task {
     val projectGroupKey = yamoryProjectGroupKey.value
     val yamoryApiKey = autoImport.yamoryApiKey.value
-    val yamoryYarnScriptUrl = autoImport.yamoryNpmScriptUrl.value
+    val yamoryYarnScriptUrl = autoImport.yamoryYarnScriptUrl.value
     val yamoryYarnManifest = autoImport.yamoryYarnManifest.value
 
     require(
