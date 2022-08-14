@@ -8,5 +8,5 @@ System.getProperty("plugin.version") match {
     addSbtPlugin("io.github.kijuky" % "sbt-yamory" % pluginVersion)
 }
 
-addSbtPlugin("org.scala-js" % "sbt-scalajs" % "1.5.1")
+addSbtPlugin("org.scala-js" % "sbt-scalajs" % "1.10.1")
 addSbtPlugin("ch.epfl.scala" % "sbt-scalajs-bundler" % "0.20.0")

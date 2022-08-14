@@ -1,13 +1,13 @@
 package io.github.kijuky.sbt.plugins.yamory
 
-import sbt._
+import sbt.*
 import sbt.io.IO
-import sbt.plugins._
-import sbt.plugins.MiniDependencyTreeKeys._
+import sbt.plugins.*
+import sbt.plugins.MiniDependencyTreeKeys.*
 
-import java.nio.file._
-import scala.language._
-import scala.sys.process._
+import java.nio.file.*
+import scala.language.*
+import scala.sys.process.*
 
 object YamoryPlugin extends AutoPlugin {
 
@@ -27,7 +27,7 @@ object YamoryPlugin extends AutoPlugin {
       taskKey[Unit]("A task that is run yamory scan for scala.js project.")
   }
 
-  import autoImport._
+  import autoImport.*
 
   override lazy val projectSettings = Seq(
     yamoryProjectGroupKey := "",
