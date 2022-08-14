@@ -7,8 +7,8 @@ addDependencyTreePlugin
 console / initialCommands := "import io.github.kijuky.sbt.plugins.yamory._"
 
 // ScalaTest
-libraryDependencies += "org.scalactic" %% "scalactic" % "3.2.9" % Test
-libraryDependencies += "org.scalatest" %% "scalatest" % "3.2.9" % Test
+libraryDependencies += "org.scalactic" %% "scalactic" % "3.2.13" % Test
+libraryDependencies += "org.scalatest" %% "scalatest" % "3.2.13" % Test
 
 // Scripted
 enablePlugins(ScriptedPlugin)
