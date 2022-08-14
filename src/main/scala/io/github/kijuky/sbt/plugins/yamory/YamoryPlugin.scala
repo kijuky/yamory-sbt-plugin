@@ -1,6 +1,7 @@
 package io.github.kijuky.sbt.plugins.yamory
 
 import sbt.*
+import sbt.Keys.*
 import sbt.io.IO
 import sbt.plugins.*
 import sbt.plugins.MiniDependencyTreeKeys.*
@@ -71,7 +72,10 @@ object YamoryPlugin extends AutoPlugin {
     val projectGroupKey = yamoryProjectGroupKey.value
     val yamoryApiKey = autoImport.yamoryApiKey.value
     val yamorySbtScriptUrl = autoImport.yamorySbtScriptUrl.value
+    val oldAsciiGraphWidth = (Compile / asciiGraphWidth).value
+    Compile / asciiGraphWidth := 10000
     val dependencies = (Compile / dependencyTree / asString).value
+    Compile / asciiGraphWidth := oldAsciiGraphWidth
 
     require(
       projectGroupKey.nonEmpty,
