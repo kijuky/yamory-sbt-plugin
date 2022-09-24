@@ -2,6 +2,8 @@ name := "sbt-yamory"
 
 sbtPlugin := true
 
+scalacOptions ++= Seq("-Xfatal-warnings", "-Xlint")
+
 addDependencyTreePlugin
 
 console / initialCommands := "import io.github.kijuky.sbt.plugins.yamory._"
