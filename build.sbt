@@ -10,7 +10,7 @@ console / initialCommands := "import io.github.kijuky.sbt.plugins.yamory._"
 
 // ScalaTest
 libraryDependencies += "org.scalactic" %% "scalactic" % "3.2.14" % Test
-libraryDependencies += "org.scalatest" %% "scalatest" % "3.2.13" % Test
+libraryDependencies += "org.scalatest" %% "scalatest" % "3.2.14" % Test
 
 // Scripted
 enablePlugins(ScriptedPlugin)
