@@ -20,6 +20,8 @@ object YamoryPlugin extends AutoPlugin {
     // for yamory
     val yamoryProjectGroupKey = settingKey[String]("PROJECT_GROUP_KEY")
     val yamoryApiKey = settingKey[String]("YAMORY_API_KEY")
+    val yamoryOpenSystem = settingKey[Option[String]]("YAMORY_OPEN_SYSTEM")
+    val yamoryDistributed = settingKey[Option[String]]("YAMORY_DISTRIBUTED")
 
     // for scala
     val yamorySbtScriptUrl = settingKey[String]("https://yamory/script/...")
@@ -35,10 +37,12 @@ object YamoryPlugin extends AutoPlugin {
 
   import autoImport.*
 
-  override lazy val projectSettings = Seq(
+  override lazy val projectSettings: Seq[Def.Setting[?]] = Seq(
     // for yamory
     yamoryProjectGroupKey := sys.env.getOrElse("PROJECT_GROUP_KEY", ""),
     yamoryApiKey := sys.env.getOrElse("YAMORY_API_KEY", ""),
+    yamoryOpenSystem := sys.env.get("YAMORY_OPEN_SYSTEM"),
+    yamoryDistributed := sys.env.get("YAMORY_DISTRIBUTED"),
 
     // for scala
     yamorySbtScriptUrl := "",
@@ -50,14 +54,16 @@ object YamoryPlugin extends AutoPlugin {
     yamoryNpm := yamoryNpmTask.value
   )
 
-  override lazy val buildSettings = Seq()
+  override lazy val buildSettings: Seq[Def.Setting[?]] = Nil
 
-  override lazy val globalSettings = Seq()
+  override lazy val globalSettings: Seq[Def.Setting[?]] = Nil
 
-  lazy val yamoryTask = Def.task {
+  private lazy val yamoryTask = Def.task {
     val projectGroupKey = yamoryProjectGroupKey.value
     val yamoryApiKey = autoImport.yamoryApiKey.value
     val yamorySbtScriptUrl = autoImport.yamorySbtScriptUrl.value
+    val yamoryOpenSystem = autoImport.yamoryOpenSystem.value
+    val yamoryDistributed = autoImport.yamoryDistributed.value
     val oldAsciiGraphWidth = (Compile / asciiGraphWidth).value
     Compile / asciiGraphWidth := 10000
     val dependencies = (Compile / dependencyTree / asString).value
@@ -86,11 +92,16 @@ object YamoryPlugin extends AutoPlugin {
           yamorySbtScriptFile.setExecutable(true),
           s"$yamorySbtScriptFile is not executable."
         )
+        val extraEnv = Seq(
+          "PROJECT_GROUP_KEY" -> projectGroupKey,
+          "YAMORY_API_KEY" -> yamoryApiKey
+        ) ++
+          yamoryOpenSystem.map("YAMORY_OPEN_SYSTEM".->) ++
+          yamoryDistributed.map("YAMORY_DISTRIBUTED".->)
         dependenciesFile #> Process(
           Seq("bash", "-c", yamorySbtScriptFilePath),
           None,
-          "PROJECT_GROUP_KEY" -> projectGroupKey,
-          "YAMORY_API_KEY" -> yamoryApiKey
+          extraEnv*
         ) !
       } finally {
         Seq(dependenciesFile, yamorySbtScriptFile).foreach(_.delete())
@@ -98,11 +109,13 @@ object YamoryPlugin extends AutoPlugin {
     }
   }
 
-  lazy val yamoryNpmTask = Def.task {
+  private lazy val yamoryNpmTask = Def.task {
     val projectGroupKey = yamoryProjectGroupKey.value
     val yamoryApiKey = autoImport.yamoryApiKey.value
     val yamoryNpmScriptUrl = autoImport.yamoryNpmScriptUrl.value
     val yamoryNpmManifest = autoImport.yamoryNpmManifest.value
+    val yamoryOpenSystem = autoImport.yamoryOpenSystem.value
+    val yamoryDistributed = autoImport.yamoryDistributed.value
 
     require(
       projectGroupKey.nonEmpty,
@@ -127,6 +140,12 @@ object YamoryPlugin extends AutoPlugin {
           yamoryNpmScriptFile.setExecutable(true),
           s"$yamoryNpmScriptFile is not executable."
         )
+        val extraEnv = Seq(
+          "PROJECT_GROUP_KEY" -> projectGroupKey,
+          "YAMORY_API_KEY" -> yamoryApiKey
+        ) ++
+          yamoryOpenSystem.map("YAMORY_OPEN_SYSTEM".->) ++
+          yamoryDistributed.map("YAMORY_DISTRIBUTED".->)
         Process(
           Seq(
             "bash",
@@ -137,8 +156,7 @@ object YamoryPlugin extends AutoPlugin {
             yamoryNpmManifest
           ),
           None,
-          "PROJECT_GROUP_KEY" -> projectGroupKey,
-          "YAMORY_API_KEY" -> yamoryApiKey
+          extraEnv*
         ) !
       } finally {
         yamoryNpmScriptFile.delete()
