@@ -2,7 +2,7 @@ name: Check
 on:
   push
 jobs:
-  scalafmt:
+  format:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
