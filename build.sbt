@@ -26,7 +26,7 @@ inThisBuild(
     organization := "io.github.kijuky",
     homepage := Some(url("https://github.com/kijuky/sbt-yamory")),
     licenses := Seq(
-      "Apache-2.0" -> url("http://www.apache.org/licenses/LICENSE-2.0")
+      "Apache-2.0" -> url("https://www.apache.org/licenses/LICENSE-2.0")
     ),
     developers := List(
       Developer(
@@ -37,6 +37,7 @@ inThisBuild(
       )
     ),
     versionScheme := Some("early-semver"),
-    sonatypeCredentialHost := "s01.oss.sonatype.org"
+    sonatypeCredentialHost := "s01.oss.sonatype.org",
+    sonatypeRepository := "https://s01.oss.sonatype.org/service/local"
   )
 )
