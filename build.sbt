@@ -9,7 +9,7 @@ lazy val root = (project in file("."))
   // test
   .settings(
     libraryDependencies ++= Seq(
-      "org.scalactic" %% "scalactic" % "3.2.15",
+      "org.scalactic" %% "scalactic" % "3.2.17",
       "org.scalatest" %% "scalatest" % "3.2.15"
     ).map(_ % Test)
   )
